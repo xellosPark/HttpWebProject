@@ -13,18 +13,23 @@ function App() {
   myHeader.append("Content-Type", "application/json");
 
   const handleButtonClick = async () => {
+
+    let raw = JSON.stringify({
+      "name" : "5"
+    });
     try {
-      const response = await fetch("http://192.168.0.136:8080/json", {
+      const response = await fetch(`http://192.168.0.136:8080/json/?Id=${1}`, {
         method: 'POST',
-        body: inputValue,
+        body: raw,
         redirect: 'follow'
-      })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json.sendText);
-        console.log(`Received ${json}`);
-        setReceivedDataList(prevList => [...prevList, json]);
-      });
+      
+    })
+    .then((res) => res.json())
+    .then((json) => {
+      console.log(json.sendText);
+      console.log(`Received ${json}`);
+      setReceivedDataList(prevList => [...prevList, json]);
+    });
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -71,25 +76,17 @@ function App() {
   }
 
   const handleDeleteBtnClick = async () => {
-
-    fetch(`http://192.168.0.136:8080/json/?Id=${1}`,{
+    var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+    fetch(`http://192.168.0.136:8080/json/?Id=${39}`, {
       method: 'DELETE',
-      redirect: 'follow'
+      headers: {
+        'Content-Type': 'application/json',
+      }
     })
-      .then(res => {
-            if(res.ok){
-              console.log("삭제 성공");
-            }
-            else{
-              throw new Error('400 아니면 500 에러남');
-            }
-        })
-        .then((resData) => {
-          console.log("성공",resData);
-        })
-        .catch(() => {
-          console.log("error 발생");
-        })
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
   };
 
 
